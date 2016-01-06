@@ -8,12 +8,18 @@ export WORKON_HOME=$HOME/.virtualenvs
 # first call this function to initialize the project folder
 # venv_make requires an initialized project folder
 function venv_init () {
-    if [[ -f ./python_version ]]; then
-        echo "Warning! The file \"python_version\" already exists!"
+    if [[ -f ./python_version.txt ]]; then
+        echo "Warning! The file \"python_version.txt\" already exists!"
     else
-        echo "python3" > ./python_version
-        echo "The project was initialized as a Python 3 project."
-        echo "If you want a Python 2 project, then edit the file \"python_version\"."
+        echo -n "Do you want a Python 2 or a Python 3 project? (2, 3): "
+        read py_ver
+        if [[ "$py_ver" != "2" && "$py_ver" != "3" ]]; then
+            echo "Invalid option."
+            return 1
+        fi
+        #
+        echo "python${py_ver}" > ./python_version.txt
+        echo "The project was initialized as a Python ${py_ver} project."
     fi
 }
 
@@ -31,14 +37,14 @@ function venv_make () {
         env=`basename "$here"`
     fi
     dir_path="$base/$env"
-    if [[ -f ./python_version ]]; then
-        read -r py_ver < ./python_version
+    if [[ -f ./python_version.txt ]]; then
+        read -r py_ver < ./python_version.txt
         virtualenv -p $py_ver "$dir_path"
         echo "cd \"$here\"" > "$dir_path"/cd_project_dir.sh
         echo "cd \"$dir_path\"" > cd_venv_dir.sh
         source "$dir_path"/bin/activate
     else
-        echo "Error! The file \"python_version\" doesn't exist!"
+        echo "Error! The file \"python_version.txt\" doesn't exist!"
         echo "Tip: run venv_init first."
     fi
 }
