@@ -57,7 +57,7 @@ Activate (in the project folder):
 
     on
 
-Deactivate:
+Deactivate (anywhere):
 
     off
 
