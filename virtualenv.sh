@@ -42,6 +42,7 @@ function venv_make () {
         virtualenv -p $py_ver "$dir_path"
         echo "cd \"$here\"" > "$dir_path"/cd_project_dir.sh
         echo "cd \"$dir_path\"" > cd_venv_dir.sh
+        "$dir_path"/bin/pip install pip -U
         source "$dir_path"/bin/activate
     else
         echo "Error! The file \"python_version.txt\" doesn't exist!"
@@ -65,6 +66,7 @@ function venv_tmp () {
     env="venv"
     dir_path="$base/$env"
     virtualenv -p python$py_ver "$dir_path"
+    "$dir_path"/bin/pip install pip -U
     source "$dir_path"/bin/activate
 }
 
