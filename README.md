@@ -35,15 +35,17 @@ Initialize a project folder:
 Provide the Python version (2 or 3) interactively and you get a
 file called `python_version.txt` whose content is either
 "python2" or "python3". I think it's a good idea to store this
-information in a file.
+information in a file. This command also creates a script called
+`update_requirements.sh` that prints the installed packages with
+their versions.
 
 Create the virtual environment:
 
     venv_make
 
 Using the file `python_version.txt` (created during the initialization)
-it creates the virtual environment for the project. The virtualenv is
-activated automatically.
+it creates the virtual environment for the project. It updates `pip` to
+the latest version and the virtualenv is activated automatically.
 
 For convenience, two jump scripts are also created. One of them is in
 the project folder and the other one is in the virtualenv folder. If
@@ -57,9 +59,23 @@ Activate (in the project folder):
 
     on
 
+New feature! If you are in a subfolder of your project, then you
+don't need to go back to the project's root folder every time when
+you want to activate the project! Simply type `on ..` or `on ../..`, etc.,
+depending on which subfolder you are in.
+
 Deactivate (anywhere):
 
     off
+
+Update requirements.txt
+-----------------------
+Upon initialization a convenience script was created in the project
+folder called `update_requirements.sh`. If you installed a new
+package, or a package was updated, then use this command to
+update your `requirements.txt` file:
+
+    ./update_requirements.sh > requirements.txt
 
 Create a temporary virtual environment
 --------------------------------------
