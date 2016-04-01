@@ -72,19 +72,29 @@ function venv_tmp () {
 
 # activate the virtual environment
 # call this function in the project folder
+# OR (new feature):
+# if you are in a direct subfolder of the project folder,
+# call it with an argument by specifying where the project folder is, ex.: on ..
 function on () {
-    if [ -z "$WORKON_HOME" ]; then
-        base=.
+    proj_dir=$1    # passed as a parameter to the function
+    if [ -z "$proj_dir" ]; then
+        proj_dir=.
+    fi
+    proj_dir=`realpath "$proj_dir"`
+#    echo "# proj_dir: ${proj_dir}"
+
+    if [ -d "${proj_dir}/venv" ] || [ -z "$WORKON_HOME" ]; then
+        base=$proj_dir
         env="venv"
     else
         base=$WORKON_HOME
-        pwd=`which pwd`
-        here=`$pwd`
-        env=`basename "$here"`
+        env=`basename "$proj_dir"`
     fi
-    dir_path="$base/$env"
 
-    source "$dir_path"/bin/activate
+    activate="${base}/${env}/bin/activate"
+    echo "# calling ${activate}"
+
+    source "${activate}"
 }
 
 # deactivate the virtual environment
