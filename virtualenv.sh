@@ -21,6 +21,7 @@ function venv_init () {
         echo "python${py_ver}" > ./python_version.txt
         echo "pip freeze --local" > ./update_requirements.sh
         chmod u+x ./update_requirements.sh
+        touch requirements.txt
         echo "The project was initialized as a Python ${py_ver} project."
         echo "Calling venv_make for you:"
         venv_make
