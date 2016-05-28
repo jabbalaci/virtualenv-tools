@@ -37,9 +37,11 @@ file called `python_version.txt` whose content is either
 "python2" or "python3". I think it's a good idea to store this
 information in a file. This command also creates a script called
 `update_requirements.sh` that prints the installed packages with
-their versions.
+their versions. *New!* This command calls `venv_make` automatically,
+so the virtual environment is also created for you.
 
-Create the virtual environment:
+If you have an initialized folder (that has `python_version.txt`)
+in it but the virt. env. is missing, then run this command:
 
     venv_make
 
