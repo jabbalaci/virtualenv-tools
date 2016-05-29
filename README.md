@@ -35,9 +35,12 @@ Initialize a project folder:
 Provide the Python version (2 or 3) interactively and you get a
 file called `python_version.txt` whose content is either
 "python2" or "python3". I think it's a good idea to store this
-information in a file. This command also creates a script called
-`update_requirements.sh` that prints the installed packages with
-their versions. *New!* This command calls `venv_make` automatically,
+information in a file because if you work with Python 2 and
+Python 3 projects too, this file will tell you immediately
+what Python version the project was written in. This command also
+creates a script called `update_requirements.sh` that prints the
+installed packages with their versions to the standard output.
+This command calls `venv_make` automatically,
 so the virtual environment is also created for you. An empty
 `requirements.txt` file is also created.
 
@@ -50,11 +53,14 @@ Using the file `python_version.txt` (created during the initialization)
 it creates the virtual environment for the project. It updates `pip` to
 the latest version and the virtualenv is activated automatically.
 
+*New!* If you have a non-empty `requirements.txt` file, then the
+script asks if you want to install the packages in this file.
+
 For convenience, two jump scripts are also created. One of them is in
 the project folder and the other one is in the virtualenv folder. If
 you type `. cd_venv_dir.sh`, then you find yourself in the virtualenv
 folder. Typing `. cd_project_dir.sh` you are redirected back to the
-project folder.
+project folder. (The `.` is the short form of `source`.)
 
 Activating / deactivating a virtual environment
 -----------------------------------------------
@@ -62,7 +68,7 @@ Activate (in the project folder):
 
     on
 
-New feature! If you are in a subfolder of your project, then you
+If you are in a subfolder of your project, then you
 don't need to go back to the project's root folder every time when
 you want to activate the project! Simply type `on ..` or `on ../..`, etc.,
 depending on which subfolder you are in.

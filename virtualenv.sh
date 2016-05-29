@@ -10,6 +10,7 @@ export WORKON_HOME=$HOME/.virtualenvs
 function venv_init () {
     if [[ -f ./python_version.txt ]]; then
         echo "Warning! The file \"python_version.txt\" already exists!"
+        echo "Tip: run venv_make as a next step."
     else
         echo -n "Do you want a Python 2 or a Python 3 project? (2, 3): "
         read py_ver
@@ -25,12 +26,18 @@ function venv_init () {
         echo "The project was initialized as a Python ${py_ver} project."
         echo "Calling venv_make for you:"
         venv_make
+        echo
+        echo "Your new virt. env. is ready and activated!"
     fi
 }
 
 # create a Python 2 or Python 3 virtual environment
 # depending on how the folder was initialized
 function venv_make () {
+    if [ -n "$VIRTUAL_ENV" ]; then
+        echo "Error! You are in an activated virt. environment!"
+        return 1
+    fi
     if [ -z "$WORKON_HOME" ]; then
         echo "The variable WORKON_HOME is undefined, thus creating the virt. env. in the current directory."
         base=.
@@ -42,16 +49,50 @@ function venv_make () {
         env=`basename "$here"`
     fi
     dir_path="$base/$env"
+    if [[ -d "$dir_path" ]]; then
+        echo "Error! The directory $dir_path already exists!"
+        return 1
+    fi
     if [[ -f ./python_version.txt ]]; then
         read -r py_ver < ./python_version.txt
         virtualenv -p $py_ver "$dir_path"
         echo "cd \"$here\"" > "$dir_path"/cd_project_dir.sh
         echo "cd \"$dir_path\"" > cd_venv_dir.sh
-        "$dir_path"/bin/pip install pip -U
         source "$dir_path"/bin/activate
+        pip install pip -U
+        if [ -s "requirements.txt" ]; then
+            # requirements.txt exists and it's not empty
+            echo
+            install_requirements
+        fi
     else
         echo "Error! The file \"python_version.txt\" doesn't exist!"
         echo "Tip: run venv_init first."
+    fi
+}
+
+# User input: yes or no.
+# If you simply press ENTER, it will be considered a "yes".
+promptyn () {
+    while true; do
+        read -p "$1 " yn
+        if [ "$yn" == "" ]; then
+            return 0
+        fi
+        case $yn in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) return 1;;
+        esac
+    done
+}
+
+# Ask the user if (s)he wants to install the requirements.
+function install_requirements () {
+    if promptyn "Install packages from requirements.txt ([y] / n)?"; then
+        pip install -r requirements.txt
+    else
+        echo "no"
     fi
 }
 
