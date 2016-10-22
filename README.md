@@ -11,7 +11,7 @@ only needed just a fraction of its features. So I decided
 to write my own wrapper functions for the plain old
 [virtualenv](https://virtualenv.readthedocs.org/en/latest/) command.
 
-This project was heavily inspired by
+This project was inspired by
 <https://github.com/jaapz/virtualenv-tools>. jaapz's work gave me the
 idea to write my own wrapper functions.
 
@@ -44,6 +44,13 @@ This command calls `venv_make` automatically,
 so the virtual environment is also created for you. An empty
 `requirements.txt` file is also created.
 
+**NEW!** This command adds 2 extra files to your project. One of
+them is called `alap.py`, which is a basic skeleton file. The other
+file is called `caller.sh`, which launches `alap.py` by default.
+You can call `caller.sh` from any directory, and you don't even
+need to activate the virt. env. of the project. `caller.sh` will take
+care all of that for you.
+
 If you have an initialized folder (that has `python_version.txt`)
 in it but the virt. env. is missing, then run this command:
 
@@ -53,7 +60,7 @@ Using the file `python_version.txt` (created during the initialization)
 it creates the virtual environment for the project. It updates `pip` to
 the latest version and the virtualenv is activated automatically.
 
-*New!* If you have a non-empty `requirements.txt` file, then the
+If you have a non-empty `requirements.txt` file, then the
 script asks if you want to install the packages in this file.
 
 For convenience, two jump scripts are also created. One of them is in
@@ -72,6 +79,8 @@ If you are in a subfolder of your project, then you
 don't need to go back to the project's root folder every time when
 you want to activate the project! Simply type `on ..` or `on ../..`, etc.,
 depending on which subfolder you are in.
+
+**NEW!** Instead of `on ../..`, you can simply type `on ...` too. `on ....` means `on ../../..`, etc.
 
 Deactivate (anywhere):
 
@@ -96,3 +105,9 @@ install it globally with `sudo pip ...`.
 You get a temporary project folder and an associated virtual environment
 in `/tmp`. Note that when you deactivate it, it is not deleted
 automatically!
+
+Tips
+----
+All the commands mentioned above start with `venv_`. Thus, you
+don't need to memorize their names. Just type `ven<TAB>` or
+`venv_<TAB>` and bash will do TAB-completion for you.

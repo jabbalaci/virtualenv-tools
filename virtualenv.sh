@@ -5,6 +5,53 @@
 # if this variable is not defined, then the virtualenv will be created in the project folder
 export WORKON_HOME=$HOME/.virtualenvs
 
+
+read -d '' CALLER_SH << "EOF"
+#!/usr/bin/env bash;
+;
+SCRIPT=`realpath -s $0`;
+SCRIPTPATH=`dirname $SCRIPT`;
+cd $SCRIPTPATH;
+;
+VENV_DIR=`cat cd_venv_dir.sh | sed -e 's/^cd //' -e 's/"//g'`;
+;
+export PATH=$VENV_DIR/bin:$PATH;
+;
+./alap.py "$@"
+EOF
+
+read -d '' PY2 << "EOF"
+#!/usr/bin/env python2;
+# coding: utf-8;
+;
+from __future__ import (absolute_import, division,;
+........................print_function, unicode_literals);
+;
+;
+def main():;
+....print('Py2→3');
+;
+##############################################################################;
+;
+if __name__ == "__main__":;
+....main()
+EOF
+
+read -d '' PY3 << "EOF"
+#!/usr/bin/env python3;
+# coding: utf-8;
+;
+;
+def main():;
+....print('Py3');
+;
+##############################################################################;
+;
+if __name__ == "__main__":;
+....main()
+EOF
+
+
 # first call this function to initialize the project folder
 # venv_make requires an initialized project folder
 function venv_init () {
@@ -19,9 +66,19 @@ function venv_init () {
             return 1
         fi
         #
+        if [[ "$py_ver" == "2" ]]; then
+            echo $PY2 | sed -e "s/; /\n/g" -e "s/\./ /g" > ./alap.py
+        fi
+        if [[ "$py_ver" == "3" ]]; then
+            echo $PY3 | sed -e "s/; /\n/g" -e "s/\./ /g" > ./alap.py
+        fi
+        chmod u+x ./alap.py
+        #
         echo "python${py_ver}" > ./python_version.txt
         echo "pip freeze --local" > ./update_requirements.sh
         chmod u+x ./update_requirements.sh
+        echo $CALLER_SH | sed -e "s/; /\n/g" > ./caller.sh
+        chmod u+x ./caller.sh
         touch requirements.txt
         echo "The project was initialized as a Python ${py_ver} project."
         echo "Calling venv_make for you:"
@@ -125,6 +182,13 @@ function on () {
     proj_dir=$1    # passed as a parameter to the function
     if [ -z "$proj_dir" ]; then
         proj_dir=.
+    fi
+    if [[ "$proj_dir" == "..." ]]; then
+        proj_dir=../..
+    elif [[ "$proj_dir" == "...." ]]; then
+        proj_dir=../../..
+    elif [[ "$proj_dir" == "....." ]]; then
+        proj_dir=../../../..
     fi
     proj_dir=`realpath "$proj_dir"`
 #    echo "# proj_dir: ${proj_dir}"
