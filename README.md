@@ -44,7 +44,7 @@ This command calls `venv_make` automatically,
 so the virtual environment is also created for you. An empty
 `requirements.txt` file is also created.
 
-**NEW!** This command adds 2 extra files to your project. One of
+This command adds 2 extra files to your project. One of
 them is called `alap.py`, which is a basic skeleton file. The other
 file is called `caller.sh`, which launches `alap.py` by default.
 You can call `caller.sh` from any directory, and you don't even
@@ -80,11 +80,23 @@ don't need to go back to the project's root folder every time when
 you want to activate the project! Simply type `on ..` or `on ../..`, etc.,
 depending on which subfolder you are in.
 
-**NEW!** Instead of `on ../..`, you can simply type `on ...` too. `on ....` means `on ../../..`, etc.
+Instead of `on ../..`, you can simply type `on ...` too. `on ....` means `on ../../..`, etc.
 
 Deactivate (anywhere):
 
     off
+
+Automatic activating / deactivating a virtual environment (NEW!)
+----------------------------------------------------------------
+By default, your virtualenv will be activated automatically when
+you enter a directory that has an attached virtual environment.
+
+Prerequisite: the virtual env. must be created with this tool, i.e.
+with `venv_init` and `venv_make`. Why? The script checks the presence
+of the file `cd_venv_dir.sh`, which is created by `venv_make`.
+
+If you don't need this auto-activation feature, then set the
+value of the variable `ALLOW_VIRTUALENV_AUTO_ACTIVATE` to `0`.
 
 Update requirements.txt
 -----------------------

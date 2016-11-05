@@ -5,6 +5,11 @@
 # if this variable is not defined, then the virtualenv will be created in the project folder
 export WORKON_HOME=$HOME/.virtualenvs
 
+# if it's allowed, then when you enter a directory and it has
+# an associated virtual env., then the venv will be activated automatically
+# possible values: 0 or 1
+ALLOW_VIRTUALENV_AUTO_ACTIVATE=1
+
 
 read -d '' CALLER_SH << "EOF"
 #!/usr/bin/env bash;
@@ -50,6 +55,31 @@ def main():;
 if __name__ == "__main__":;
 ....main()
 EOF
+
+
+# init and create the virt. env. in the current directory
+# (by overwriting the WORKON_HOME variable)
+function venv_init_here () {
+    backup=$WORKON_HOME
+    #
+    export WORKON_HOME=
+    venv_init
+    #
+    export WORKON_HOME=$backup
+}
+
+
+# create the virt. env. in the current directory
+# (by overwriting the WORKON_HOME variable)
+# prerequisite: the folder is initialized
+function venv_make_here () {
+    backup=$WORKON_HOME
+    #
+    export WORKON_HOME=
+    venv_make
+    #
+    export WORKON_HOME=$backup
+}
 
 
 # first call this function to initialize the project folder
@@ -209,5 +239,23 @@ function on () {
 
 # deactivate the virtual environment
 alias off='deactivate'
+
+# virtualenv auto activation idea borrowed from
+# http://toranbillups.com/blog/archive/2012/04/22/Automatically-activate-your-virtualenv/
+
+activate_virtualenv() {
+  if [ -f cd_venv_dir.sh ]; then
+    off &>/dev/null
+    on
+  fi
+}
+
+virtualenv_cd() {
+  cd "$@" && activate_virtualenv
+}
+
+if [ "$ALLOW_VIRTUALENV_AUTO_ACTIVATE" -eq "1" ]; then
+    alias cd="virtualenv_cd"
+fi
 
 # END: Jabba's Python virtualenv tools
