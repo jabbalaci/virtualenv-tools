@@ -86,7 +86,7 @@ Deactivate (anywhere):
 
     off
 
-Automatic activating / deactivating a virtual environment (NEW!)
+Automatic activating / deactivating a virtual environment
 ----------------------------------------------------------------
 By default, your virtualenv will be activated automatically when
 you enter a directory that has an attached virtual environment.
@@ -117,6 +117,17 @@ install it globally with `sudo pip ...`.
 You get a temporary project folder and an associated virtual environment
 in `/tmp`. Note that when you deactivate it, it is not deleted
 automatically!
+
+Visual Studio Code support (NEW!)
+---------------------------------
+To use VS Code in a virtual environment, you need to specify the
+location of the local Python interpreter in your workspace settings
+(`.vscode/settings.json`). If you run
+
+    venv_init_vscode
+
+then your workspace settings will be initialized and VS Code will
+use the Python interpreter of the virt. env.
 
 Tips
 ----
