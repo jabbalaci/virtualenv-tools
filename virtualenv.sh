@@ -206,15 +206,18 @@ function venv_tmp () {
 # Init. workspace settings for Visual Studio Code. This way, VS Code
 # will use the interpreter of the virt. env.
 function venv_init_vscode () {
-    if [ ! -f "cd_venv_dir.sh" ]; then
+    if [ -d "venv" ]; then
+        python_path=venv
+    elif [ ! -f "cd_venv_dir.sh" ]; then
         echo "The file cd_venv_dir is missing."
         return 1
+    else
+        python_path=`cat cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
     fi
     if [ ! -d ".vscode" ]; then
         mkdir .vscode
         echo "# .vscode dir. was created"
     fi
-    python_path=`cat cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
     read -d '' settings <<EOL
 // Place your settings in this file to overwrite default and user settings.;
 {;
