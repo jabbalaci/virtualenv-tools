@@ -1,5 +1,5 @@
 # START: Jabba's Python virtualenv tools
-# heavily inspired by https://github.com/jaapz/virtualenv-tools
+# inspired by https://github.com/jaapz/virtualenv-tools
 
 # virtualenvs will be created in this directory
 # if this variable is not defined, then the virtualenv will be created in the project folder
@@ -89,8 +89,11 @@ function venv_init () {
         echo "Warning! The file \"python_version.txt\" already exists!"
         echo "Tip: run venv_make as a next step."
     else
-        echo -n "Do you want a Python 2 or a Python 3 project? (2, 3): "
+        echo -n "Do you want a Python 2 or a Python 3 project? (2 / [3]): "
         read py_ver
+        if [ "$py_ver" == "" ]; then
+            py_ver="3"
+        fi
         if [[ "$py_ver" != "2" && "$py_ver" != "3" ]]; then
             echo "Invalid option."
             return 1
@@ -187,8 +190,11 @@ function install_requirements () {
 # It is not deleted automatically!
 # However, /tmp is cleaned upon reboot, so that may be enough.
 function venv_tmp () {
-    echo -n "Create a temp virt. env. with Python 2 or Python 3 (2, 3): "
+    echo -n "Create a temp virt. env. with Python 2 or Python 3 (2 / [3]): "
     read py_ver
+    if [ "$py_ver" == "" ]; then
+        py_ver="3"
+    fi
     if [[ "$py_ver" != "2" && "$py_ver" != "3" ]]; then
         echo "Invalid option."
         return 1
