@@ -10,7 +10,6 @@ export WORKON_HOME=$HOME/.virtualenvs
 # possible values: 0 or 1
 ALLOW_VIRTUALENV_AUTO_ACTIVATE=1
 
-
 read -d '' CALLER_SH << "EOF"
 #!/usr/bin/env bash;
 ;
@@ -116,8 +115,10 @@ function venv_init () {
         echo "The project was initialized as a Python ${py_ver} project."
         echo "Calling venv_make for you:"
         venv_make
-        echo
-        echo "Your new virt. env. is ready and activated!"
+        if [[ "$?" == "0" ]]; then
+            echo
+            echo "Your new virt. env. is ready and activated!"
+        fi
     fi
 }
 
@@ -134,9 +135,10 @@ function venv_make () {
         env="venv"
     else
         base=$WORKON_HOME
-        pwd=`which pwd`
-        here=`$pwd`
+        here=`$(which pwd)`
         env=`basename "$here"`
+        myhash=`echo -n $(date "+%s%N") | md5sum | head -c 8`
+        env=$env-$myhash
     fi
     dir_path="$base/$env"
     if [[ -d "$dir_path" ]]; then
@@ -219,6 +221,7 @@ function venv_init_vscode () {
         return 1
     else
         python_path=`cat cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
+        # echo $python_path
     fi
     if [ ! -d ".vscode" ]; then
         mkdir .vscode
@@ -242,7 +245,7 @@ EOL
 
 # activate the virtual environment
 # call this function in the project folder
-# OR (new feature):
+# OR:
 # if you are in a direct subfolder of the project folder,
 # call it with an argument by specifying where the project folder is, ex.: on ..
 function on () {
@@ -257,21 +260,20 @@ function on () {
     elif [[ "$proj_dir" == "....." ]]; then
         proj_dir=../../../..
     fi
-    proj_dir=`realpath "$proj_dir"`
-#    echo "# proj_dir: ${proj_dir}"
 
     if [ -d "${proj_dir}/venv" ] || [ -z "$WORKON_HOME" ]; then
-        base=$proj_dir
-        env="venv"
+        activate="${proj_dir}/venv/bin/activate"
     else
-        base=$WORKON_HOME
-        env=`basename "$proj_dir"`
+        venv_path=`cat ${proj_dir}/cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
+        activate="${venv_path}/bin/activate"
     fi
 
-    activate="${base}/${env}/bin/activate"
     echo "# calling ${activate}"
-
     source "${activate}"
+    if [[ "$?" != "0" ]]; then
+        echo
+        echo "Error: the virt. env. is missing. You should make it first."
+    fi
 }
 
 # deactivate the virtual environment

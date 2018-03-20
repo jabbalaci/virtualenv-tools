@@ -56,9 +56,10 @@ in it but the virt. env. is missing, then run this command:
 
     venv_make
 
-Using the file `python_version.txt` (created during the initialization)
-it creates the virtual environment for the project. It updates `pip` to
-the latest version and the virtualenv is activated automatically.
+Using the files `python_version.txt` and `cd_venv_dir.sh` (both created
+during the initialization) it creates the virtual environment for the
+project. It updates `pip` to the latest version and the virtualenv is
+activated automatically.
 
 If you have a non-empty `requirements.txt` file, then the
 script asks if you want to install the packages in this file.
@@ -80,7 +81,8 @@ don't need to go back to the project's root folder every time when
 you want to activate the project! Simply type `on ..` or `on ../..`, etc.,
 depending on which subfolder you are in.
 
-Instead of `on ../..`, you can simply type `on ...` too. `on ....` means `on ../../..`, etc.
+Instead of `on ../..`, you can simply type `on ...` too. `on ....` means
+`on ../../..`, etc.
 
 Deactivate (anywhere):
 
@@ -118,8 +120,8 @@ You get a temporary project folder and an associated virtual environment
 in `/tmp`. Note that when you deactivate it, it is not deleted
 automatically!
 
-Visual Studio Code support (NEW!)
----------------------------------
+Visual Studio Code support
+--------------------------
 To use VS Code in a virtual environment, you need to specify the
 location of the local Python interpreter in your workspace settings
 (`.vscode/settings.json`). If you run
@@ -128,6 +130,17 @@ location of the local Python interpreter in your workspace settings
 
 then your workspace settings will be initialized and VS Code will
 use the Python interpreter of the virt. env.
+
+What's new?
+-----------
+When you create a new virtual environment, by default it is created in
+your `~/.virtualenvs` folder, e.g. `~/.virtualenvs/first_project`. The
+new thing is that a hash value is added to the folder's name (example:
+`~/.virtualenvs/first_project-ee02efc7`). This way several projects can
+have the same name, the virtual environments will be nicely separated. You
+can simply ignore this hash value, everything else works the same way
+(`on` will still find and activate the virt. env.). In your project
+folder this hash value can be found in the `cd_venv_dir.sh` file.
 
 Tips
 ----
