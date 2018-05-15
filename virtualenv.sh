@@ -139,8 +139,12 @@ function venv_make () {
         env=`basename "$here"`
         myhash=`echo -n $(date "+%s%N") | md5sum | head -c 8`
         env=$env-$myhash
+        dir_path="$base/$env"
     fi
-    dir_path="$base/$env"
+    if [[ -f ./cd_venv_dir.sh ]]; then
+        dir_path=`cat ./cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
+    fi
+    # by now `dir_path` is set
     if [[ -d "$dir_path" ]]; then
         echo "Error! The directory $dir_path already exists!"
         return 1
