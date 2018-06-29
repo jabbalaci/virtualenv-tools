@@ -132,7 +132,7 @@ function venv_make () {
     if [ -z "$WORKON_HOME" ]; then
         echo "The variable WORKON_HOME is undefined, thus creating the virt. env. in the current directory."
         base=.
-        env="venv"
+        env=".venv"
     else
         base=$WORKON_HOME
         here=`$(which pwd)`
@@ -208,7 +208,7 @@ function venv_tmp () {
     #
     base=`mktemp -d -t venv_XXXXX`
     cd $base
-    env="venv"
+    env=".venv"
     dir_path="$base/$env"
     virtualenv -p python$py_ver "$dir_path"
     "$dir_path"/bin/pip install pip -U
@@ -218,8 +218,8 @@ function venv_tmp () {
 # Init. workspace settings for Visual Studio Code. This way, VS Code
 # will use the interpreter of the virt. env.
 function venv_init_vscode () {
-    if [ -d "venv" ]; then
-        python_path=venv
+    if [ -d ".venv" ]; then
+        python_path=.venv
     elif [ ! -f "cd_venv_dir.sh" ]; then
         echo "The file cd_venv_dir is missing."
         return 1
@@ -265,10 +265,14 @@ function on () {
         proj_dir=../../../..
     fi
 
-    if [ -d "${proj_dir}/venv" ] || [ -z "$WORKON_HOME" ]; then
-        activate="${proj_dir}/venv/bin/activate"
+    if [ -d "${proj_dir}/.venv" ] || [ -z "$WORKON_HOME" ]; then
+        activate="${proj_dir}/.venv/bin/activate"
     else
-        venv_path=`cat ${proj_dir}/cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
+        if [ -f ${proj_dir}/cd_venv_dir.sh ]; then
+            venv_path=`cat ${proj_dir}/cd_venv_dir.sh | sed -e "s/^cd //" -e 's/"//g'`
+        else
+            venv_path=`pipenv --venv`
+        fi
         activate="${venv_path}/bin/activate"
     fi
 
@@ -287,7 +291,7 @@ alias off='deactivate'
 # http://toranbillups.com/blog/archive/2012/04/22/Automatically-activate-your-virtualenv/
 
 activate_virtualenv() {
-  if [ -f cd_venv_dir.sh ]; then
+  if [ -f Pipfile -o -f cd_venv_dir.sh ]; then
     off &>/dev/null
     on
   fi
